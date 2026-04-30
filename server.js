@@ -3,10 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './db/DbConnect.js';
 
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.DB_PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -46,10 +47,10 @@ app.post('/addSchool', async (req, res) => {
     try {
         const schoolId = await pool.execute('SELECT LAST_INSERT_ID() AS id');   
         await pool.query('SET @count = 0;');
-        await pool.query('UPDATE school SET id = (@count := @count + 1);');
+        await pool.query('UPDATE School SET id = (@count := @count + 1);');
     
         // 2. Reset the AUTO_INCREMENT counter to the new maximum + 1
-        await pool.query(`ALTER TABLE school AUTO_INCREMENT = ${schoolId[0][0].id + 1};`);
+        await pool.query(`ALTER TABLE School AUTO_INCREMENT = ${schoolId[0][0].id + 1};`);
         const [result] = 
         await pool.query(
             'INSERT INTO School (name, address, latitude, longitude, location) VALUES (?, ?, ?, ?, ST_GeomFromText(?,4326))', 
