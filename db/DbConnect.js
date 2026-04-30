@@ -14,12 +14,10 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
   decimalNumbers: true,
-  ssl: {
-    ca: fs.readFileSync(process.env.DB_SSL_CA || './db/ca.pem'),
-    rejectUnauthorized: false
-  }
 });
 
 export default pool;
+
+
 
 
